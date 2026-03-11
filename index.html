@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Math Tug of War Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="overlay" class="overlay">
+        <div class="result-card">
+            <h1 id="winner-text">TEAM 1 JEET GAYI!</h1>
+            <button onclick="location.reload()">PHIR SE KHELO</button>
+        </div>
+    </div>
+
+    <div class="top-nav">
+        <button class="nav-btn">🏠 HOME</button>
+        <div class="game-title">TUG OF WAR: MATHEMATICS</div>
+        <div class="nav-btn">🇬🇧 EN ▾</div>
+    </div>
+
+    <div class="arena">
+        <div class="panel blue-side">
+            <div class="score-row">Team 1 <span id="scoreA">0</span></div>
+            <div class="math-q" id="qA">-- + --</div>
+            <div class="ans-screen" id="displayA">0</div>
+            <div class="keypad">
+                <button onclick="press(1,'A')">1</button><button onclick="press(2,'A')">2</button><button onclick="press(3,'A')">3</button>
+                <button onclick="press(4,'A')">4</button><button onclick="press(5,'A')">5</button><button onclick="press(6,'A')">6</button>
+                <button onclick="press(7,'A')">7</button><button onclick="press(8,'A')">8</button><button onclick="press(9,'A')">9</button>
+                <button class="btn-red" onclick="clearInp('A')">X</button>
+                <button onclick="press(0,'A')">0</button>
+                <button class="btn-blue" id="btnA" onclick="submit('A')">✓</button>
+            </div>
+        </div>
+
+        <div class="animation-zone">
+            <div class="timer" id="timer">⏱ 00:30</div>
+            <div class="video-window">
+                <div id="video-stage" class="video-stage">
+                    <video id="tugVideo" autoplay loop muted>
+                        <source src="Screen Recording 2026-03-11 224218.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="divider-line"></div>
+            </div>
+        </div>
+
+        <div class="panel red-side">
+            <div class="score-row">Team 2 <span id="scoreB">0</span></div>
+            <div class="math-q" id="qB">-- + --</div>
+            <div class="ans-screen" id="displayB">0</div>
+            <div class="keypad">
+                <button onclick="press(1,'B')">1</button><button onclick="press(2,'B')">2</button><button onclick="press(3,'B')">3</button>
+                <button onclick="press(4,'B')">4</button><button onclick="press(5,'B')">5</button><button onclick="press(6,'B')">6</button>
+                <button onclick="press(7,'B')">7</button><button onclick="press(8,'B')">8</button><button onclick="press(9,'B')">9</button>
+                <button class="btn-red" onclick="clearInp('B')">X</button>
+                <button onclick="press(0,'B')">0</button>
+                <button class="btn-blue" id="btnB" onclick="submit('B')">✓</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

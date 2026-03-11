@@ -1,0 +1,36 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+
+/* Overlay Styling */
+.overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); display: none; /* Default Hidden */
+    justify-content: center; align-items: center; z-index: 999;
+}
+.result-card { background: white; padding: 40px; border-radius: 20px; text-align: center; }
+
+/* Layout Styling */
+.top-nav { display: flex; justify-content: space-between; padding: 10px 40px; background: white; border-bottom: 2px solid #ddd; }
+.game-title { font-size: 24px; font-weight: bold; color: #1e40af; }
+
+.arena { display: flex; height: 90vh; align-items: center; }
+
+.panel { flex: 1; height: 100%; background: white; padding: 25px; display: flex; flex-direction: column; align-items: center; border: 1px solid #e2e8f0; }
+.blue-side { border-top: 12px solid #3b82f6; }
+.red-side { border-top: 12px solid #ef4444; }
+
+.math-q { font-size: 34px; font-weight: bold; margin: 30px 0; color: #1e3a8a; }
+.ans-screen { width: 100%; background: #f8fafc; padding: 15px; text-align: center; font-size: 28px; border-radius: 10px; border: 1px solid #cbd5e1; margin-bottom: 25px; }
+
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
+.keypad button { height: 65px; border: none; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 10px; font-size: 22px; font-weight: bold; cursor: pointer; }
+
+.btn-blue { background: #3b82f6 !important; color: white; }
+.btn-red { background: #ef4444 !important; color: white; }
+
+/* Video Window Styling */
+.animation-zone { flex: 2; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; border-left: 2px solid #e2e8f0; border-right: 2px solid #e2e8f0; }
+.video-window { width: 100%; height: 450px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
+.video-stage { width: 100%; display: flex; justify-content: center; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+#tugVideo { width: 1000px; }
+.divider-line { position: absolute; left: 50%; height: 80%; width: 2px; border-left: 2px dashed #cbd5e1; }
