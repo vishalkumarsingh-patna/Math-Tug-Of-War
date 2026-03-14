@@ -1,5 +1,17 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body { 
+    background: #f1f5f9; 
+    font-family: 'Segoe UI', sans-serif; 
+    /* Fix: overflow ko auto kiya taaki rotate hone par scroll ho sake */
+    overflow-x: hidden;
+    overflow-y: auto; 
+    min-height: 100vh; 
+}
 
 /* Overlay */
 .overlay {
@@ -10,15 +22,26 @@ body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow: hidde
 .result-card { background: white; padding: 30px; border-radius: 20px; text-align: center; }
 
 /* Top Nav */
-.top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: white; border-bottom: 2px solid #ddd; height: 60px; }
+.top-nav { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 0 20px; 
+    background: white; 
+    border-bottom: 2px solid #ddd; 
+    height: 60px; 
+    position: sticky; /* Nav ko top par fix rakhega scroll ke waqt */
+    top: 0;
+    z-index: 10;
+}
 .game-title { font-size: 1.2rem; font-weight: bold; color: #1e40af; }
 
-/* Arena: Middle Position Logic */
+/* Arena Logic */
 .arena { 
     display: flex; 
-    height: calc(100vh - 60px); 
+    min-height: calc(100vh - 60px); 
     align-items: stretch; 
-    justify-content: center; /* Desktop par center alignment */
+    justify-content: center; 
 }
 
 .panel { 
@@ -28,22 +51,23 @@ body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow: hidde
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    justify-content: center; /* Content ko panel ke beech mein rakhega */
+    justify-content: center; 
     border: 1px solid #e2e8f0; 
 }
 .blue-side { border-top: 10px solid #3b82f6; }
 .red-side { border-top: 10px solid #ef4444; }
 
-/* Animation Zone (Middle Video) */
+/* Animation Zone */
 .animation-zone { 
-    flex: 2; /* Isse video zone ko zyada space milega */
+    flex: 2; 
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    justify-content: center; /* Video ko vertical center karne ke liye */
+    justify-content: center; 
     background: white; 
     position: relative;
     overflow: hidden;
+    min-height: 200px; /* Minimum height ensure karega */
 }
 
 .timer { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; color: #333; z-index: 2; }
@@ -65,7 +89,7 @@ body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow: hidde
 
 #tugVideo { 
     width: 100%; 
-    max-width: 800px; /* Desktop par bada dikhega */
+    max-width: 800px; 
     height: auto; 
 }
 
@@ -84,22 +108,34 @@ body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow: hidde
 .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 200px; }
 .keypad button { height: 50px; border: none; background: #f8fafc; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
 
-/* MOBILE SETTINGS */
+/* MOBILE & LANDSCAPE SETTINGS */
 @media (max-width: 768px) {
-    .arena { flex-direction: column; overflow-y: auto; }
+    body { overflow-y: auto; } /* Mobile par scrolling active */
     
-    /* Video mobile par middle mein rahega panels ke beech mein */
+    .arena { 
+        flex-direction: column; 
+        height: auto; /* Fixed height hatayi gayi */
+    }
+    
     .animation-zone { 
-        order: 2; /* Team 1 (1), Video (2), Team 2 (3) */
-        height: 250px; 
+        order: 2; 
+        height: 300px; 
         flex: none; 
         border-top: 2px solid #eee;
         border-bottom: 2px solid #eee;
     }
     
-    .panel.blue-side { order: 1; height: auto; padding: 20px 10px; }
-    .panel.red-side { order: 3; height: auto; padding: 20px 10px; }
+    .panel.blue-side { order: 1; min-height: 350px; padding: 20px 10px; }
+    .panel.red-side { order: 3; min-height: 350px; padding: 20px 10px; }
     
     .math-q { font-size: 1.8rem; }
-    #tugVideo { max-width: 100%; }
+    #tugVideo { max-width: 90%; }
+}
+
+/* Jab screen rotate ho (Landscape) aur height kam ho */
+@media screen and (max-height: 500px) {
+    .top-nav { height: 40px; }
+    .animation-zone { height: 200px; }
+    .keypad button { height: 40px; }
+    .math-q { font-size: 1.5rem; }
 }
