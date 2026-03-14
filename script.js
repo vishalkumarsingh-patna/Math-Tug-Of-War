@@ -2,28 +2,48 @@ let game = {
     A: { ans: 0, cur: "", score: 0, canPlay: true },
     B: { ans: 0, cur: "", score: 0, canPlay: true },
     pos: 0,         
-    timeLeft: 240,   // <--- TIME 240 SECONDS KAR DIYA HAI
-    status: "ON"    
+    timeLeft: 60,   // Default time, ye start game par change hoga
+    status: "WAITING" // Shuru mein game ruka rahega
 };
 
-// --- IMPROVED TIMER LOGIC ---
-let timerLoop = setInterval(() => {
-    if (game.timeLeft > 0 && game.status === "ON") {
-        game.timeLeft--;
-        
-        // Minutes:Seconds format
-        let mins = Math.floor(game.timeLeft / 60);
-        let secs = game.timeLeft % 240;
-        let displayTime = `${mins < 10 ? '0'+mins : mins}:${secs < 10 ? '0'+secs : secs}`;
-        
-        document.getElementById('timer').innerText = `⏱ ${displayTime}`;
-    } else if (game.status === "ON") {
-        matchOver("TIME KHATAM!");
-    }
-}, 1000);
+let timerLoop;
+
+// --- DYNAMIC START LOGIC ---
+function startGame() {
+    // HTML ke select menu se time lena
+    let selectedTime = document.getElementById('time-select').value;
+    game.timeLeft = parseInt(selectedTime);
+    
+    // UI update
+    document.getElementById('setup-screen').style.display = 'none';
+    game.status = "ON";
+    
+    // Questions generate karna
+    genNewQ('A'); 
+    genNewQ('B');
+    
+    // Timer shuru karna
+    startTimer();
+}
+
+function startTimer() {
+    timerLoop = setInterval(() => {
+        if (game.timeLeft > 0 && game.status === "ON") {
+            game.timeLeft--;
+            
+            let mins = Math.floor(game.timeLeft / 60);
+            let secs = game.timeLeft % 60; // FIX: % 60 hona chahiye 240 nahi
+            let displayTime = `${mins < 10 ? '0'+mins : mins}:${secs < 10 ? '0'+secs : secs}`;
+            
+            document.getElementById('timer').innerText = `⏱ ${displayTime}`;
+        } else if (game.status === "ON") {
+            matchOver("TIME KHATAM!");
+        }
+    }, 1000);
+}
 
 function press(num, team) {
-    if (game.status === "OFF") return;
+    if (game.status !== "ON") return;
     if (game[team].cur.length < 4) {
         game[team].cur += num;
         document.getElementById(`display${team}`).innerText = game[team].cur;
@@ -36,14 +56,14 @@ function clearInp(team) {
 }
 
 function submit(team) {
-    if (!game[team].canPlay || game.status === "OFF" || game[team].cur === "") return;
+    if (!game[team].canPlay || game.status !== "ON" || game[team].cur === "") return;
 
     if (parseInt(game[team].cur) === game[team].ans) {
         game[team].canPlay = false; 
         game[team].score++;
         document.getElementById(`score${team}`).innerText = game[team].score;
 
-        // Movement in Percentage (%) for Responsiveness
+        // Responsibility ke liye Percentage movement
         game.pos += (team === 'A' ? -8 : 8); 
         document.getElementById('video-stage').style.transform = `translateX(${game.pos}%)`;
 
@@ -60,6 +80,10 @@ function submit(team) {
         }, 500);
     } else {
         clearInp(team);
+        // Galat answer par feedback (Optional: Red shake)
+        let screen = document.getElementById(`display${team}`);
+        screen.style.color = "red";
+        setTimeout(() => { screen.style.color = "white"; }, 300);
     }
 }
 
@@ -86,4 +110,9 @@ function matchOver(msg) {
     document.getElementById('winner-text').innerText = msg;
 }
 
-genNewQ('A'); genNewQ('B');
+// Multiplayer/Firebase Placeholder (Gmail login ke liye)
+function loginWithGoogle() {
+    console.log("Firebase login trigger...");
+    // Jab aap Firebase connect karenge, yahan uska code aayega
+    alert("Google Login API connect karni hogi (Firebase Console se)");
+}
