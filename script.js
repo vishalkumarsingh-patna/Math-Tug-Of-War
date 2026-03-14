@@ -1,24 +1,27 @@
-// Game ki state maintain karne ke liye object
 let game = {
     A: { ans: 0, cur: "", score: 0, canPlay: true },
     B: { ans: 0, cur: "", score: 0, canPlay: true },
-    pos: 0,         // Percentage mein position (0 = center)
-    timeLeft: 30,   // Match ka time
-    status: "ON"    // Game chalu hai ya khatam
+    pos: 0,         
+    timeLeft: 60,   // <--- TIME 60 SECONDS KAR DIYA HAI
+    status: "ON"    
 };
 
-// --- TIMER LOGIC ---
+// --- IMPROVED TIMER LOGIC ---
 let timerLoop = setInterval(() => {
     if (game.timeLeft > 0 && game.status === "ON") {
         game.timeLeft--;
-        let displayTime = game.timeLeft < 10 ? '0' + game.timeLeft : game.timeLeft;
-        document.getElementById('timer').innerText = `⏱ 00:${displayTime}`;
+        
+        // Minutes:Seconds format
+        let mins = Math.floor(game.timeLeft / 60);
+        let secs = game.timeLeft % 60;
+        let displayTime = `${mins < 10 ? '0'+mins : mins}:${secs < 10 ? '0'+secs : secs}`;
+        
+        document.getElementById('timer').innerText = `⏱ ${displayTime}`;
     } else if (game.status === "ON") {
         matchOver("TIME KHATAM!");
     }
 }, 1000);
 
-// Keypad press handle karne ke liye
 function press(num, team) {
     if (game.status === "OFF") return;
     if (game[team].cur.length < 4) {
@@ -27,13 +30,11 @@ function press(num, team) {
     }
 }
 
-// Input clear karne ke liye
 function clearInp(team) {
     game[team].cur = "";
     document.getElementById(`display${team}`).innerText = "0";
 }
 
-// Jawab submit karne ka logic
 function submit(team) {
     if (!game[team].canPlay || game.status === "OFF" || game[team].cur === "") return;
 
@@ -42,26 +43,19 @@ function submit(team) {
         game[team].score++;
         document.getElementById(`score${team}`).innerText = game[team].score;
 
-        // --- RESPONSIVE LOGIC ---
-        // Pixels ki jagah percentage use kar rahe hain (Har screen pe sahi chalega)
-        let shift = (team === 'A' ? -10 : 10); 
-        game.pos += shift;
-        
-        // Video stage ko move karna
+        // Movement in Percentage (%) for Responsiveness
+        game.pos += (team === 'A' ? -8 : 8); 
         document.getElementById('video-stage').style.transform = `translateX(${game.pos}%)`;
 
-        // Winning condition check (e.g., 50% shift hone par jeet)
-        if (Math.abs(game.pos) >= 50) {
+        if (Math.abs(game.pos) >= 45) {
             matchOver(`TEAM ${team === 'A' ? '1' : '2'} NE RASSI KHICH LI!`);
         }
 
-        // Feedback
         let btn = document.getElementById(`btn${team}`);
-        let originalColor = btn.style.backgroundColor;
         btn.style.backgroundColor = "#22c55e";
 
         setTimeout(() => {
-            btn.style.backgroundColor = originalColor;
+            btn.style.backgroundColor = "#3b82f6";
             genNewQ(team); 
         }, 500);
     } else {
@@ -69,7 +63,6 @@ function submit(team) {
     }
 }
 
-// Naya random sawal banane ke liye
 function genNewQ(team) {
     let n1 = Math.floor(Math.random() * 90) + 1;
     let n2 = Math.floor(Math.random() * 90) + 1;
@@ -80,7 +73,6 @@ function genNewQ(team) {
     document.getElementById(`display${team}`).innerText = "0";
 }
 
-// Match khatam hone pe result dikhane ke liye
 function matchOver(msg) {
     game.status = "OFF";
     clearInterval(timerLoop);
@@ -94,5 +86,4 @@ function matchOver(msg) {
     document.getElementById('winner-text').innerText = msg;
 }
 
-// Init
 genNewQ('A'); genNewQ('B');
