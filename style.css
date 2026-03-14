@@ -1,36 +1,93 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
 
 /* Overlay Styling */
 .overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85); display: none; /* Default Hidden */
+    background: rgba(0,0,0,0.85); display: none; 
     justify-content: center; align-items: center; z-index: 999;
 }
-.result-card { background: white; padding: 40px; border-radius: 20px; text-align: center; }
+.result-card { background: white; padding: 40px; border-radius: 20px; text-align: center; width: 80%; max-width: 400px; }
 
-/* Layout Styling */
-.top-nav { display: flex; justify-content: space-between; padding: 10px 40px; background: white; border-bottom: 2px solid #ddd; }
-.game-title { font-size: 24px; font-weight: bold; color: #1e40af; }
+/* Navigation */
+.top-nav { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    padding: 10px 20px; 
+    background: white; 
+    border-bottom: 2px solid #ddd; 
+}
+.game-title { font-size: 18px; font-weight: bold; color: #1e40af; text-align: center; flex: 1; }
 
-.arena { display: flex; height: 90vh; align-items: center; }
+/* Arena - Desktop par horizontal, Mobile par vertical */
+.arena { 
+    display: flex; 
+    height: calc(100vh - 60px); /* Top nav minus karke */
+    align-items: stretch; 
+}
 
-.panel { flex: 1; height: 100%; background: white; padding: 25px; display: flex; flex-direction: column; align-items: center; border: 1px solid #e2e8f0; }
-.blue-side { border-top: 12px solid #3b82f6; }
-.red-side { border-top: 12px solid #ef4444; }
+.panel { 
+    flex: 1; 
+    background: white; 
+    padding: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    border: 1px solid #e2e8f0; 
+    overflow-y: auto;
+}
+.blue-side { border-top: 8px solid #3b82f6; }
+.red-side { border-top: 8px solid #ef4444; }
 
-.math-q { font-size: 34px; font-weight: bold; margin: 30px 0; color: #1e3a8a; }
-.ans-screen { width: 100%; background: #f8fafc; padding: 15px; text-align: center; font-size: 28px; border-radius: 10px; border: 1px solid #cbd5e1; margin-bottom: 25px; }
+.math-q { font-size: 28px; font-weight: bold; margin: 15px 0; color: #1e3a8a; }
+.ans-screen { width: 100%; background: #f8fafc; padding: 10px; text-align: center; font-size: 24px; border-radius: 10px; border: 1px solid #cbd5e1; margin-bottom: 15px; }
 
-.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
-.keypad button { height: 65px; border: none; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 10px; font-size: 22px; font-weight: bold; cursor: pointer; }
+/* Keypad Grid */
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 250px; }
+.keypad button { height: 50px; border: none; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+.keypad button:active { transform: scale(0.95); background: #f1f5f9; }
 
 .btn-blue { background: #3b82f6 !important; color: white; }
 .btn-red { background: #ef4444 !important; color: white; }
 
-/* Video Window Styling */
-.animation-zone { flex: 2; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; border-left: 2px solid #e2e8f0; border-right: 2px solid #e2e8f0; }
-.video-window { width: 100%; height: 450px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
-.video-stage { width: 100%; display: flex; justify-content: center; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-#tugVideo { width: 1000px; }
-.divider-line { position: absolute; left: 50%; height: 80%; width: 2px; border-left: 2px dashed #cbd5e1; }
+/* Animation Zone */
+.animation-zone { 
+    flex: 1.5; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    background: white; 
+    position: relative;
+}
+.video-window { width: 100%; height: 100%; max-height: 400px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
+#tugVideo { width: 100%; max-width: 800px; height: auto; object-fit: contain; }
+.divider-line { position: absolute; left: 50%; height: 100%; width: 1px; border-left: 2px dashed #cbd5e1; z-index: 1; }
+
+/* --- MOBILE RESPONSIVE CODE --- */
+@media (max-width: 768px) {
+    body { overflow-y: auto; }
+    .arena { flex-direction: column; height: auto; }
+    
+    .animation-zone { 
+        order: -1; /* Video ko sabse upar laane ke liye */
+        height: 250px; 
+        width: 100%;
+        border: none;
+        border-bottom: 2px solid #ddd;
+    }
+    
+    .video-window { height: 200px; }
+
+    .panel { 
+        width: 100%; 
+        height: auto; 
+        padding: 20px;
+        border-top: 5px solid;
+    }
+    
+    .keypad { max-width: 300px; }
+    .game-title { font-size: 16px; }
+    .nav-btn { font-size: 12px; }
+}
