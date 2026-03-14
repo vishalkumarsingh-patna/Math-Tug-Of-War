@@ -2,7 +2,7 @@ let game = {
     A: { ans: 0, cur: "", score: 0, canPlay: true },
     B: { ans: 0, cur: "", score: 0, canPlay: true },
     pos: 0,         
-    timeLeft: 60,   // <--- TIME 60 SECONDS KAR DIYA HAI
+    timeLeft: 240,   // <--- TIME 240 SECONDS KAR DIYA HAI
     status: "ON"    
 };
 
@@ -13,7 +13,7 @@ let timerLoop = setInterval(() => {
         
         // Minutes:Seconds format
         let mins = Math.floor(game.timeLeft / 60);
-        let secs = game.timeLeft % 60;
+        let secs = game.timeLeft % 240;
         let displayTime = `${mins < 10 ? '0'+mins : mins}:${secs < 10 ? '0'+secs : secs}`;
         
         document.getElementById('timer').innerText = `⏱ ${displayTime}`;
