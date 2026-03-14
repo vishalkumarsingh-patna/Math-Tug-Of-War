@@ -1,30 +1,24 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
 
-/* Overlay Styling */
+/* Overlay */
 .overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.85); display: none; 
     justify-content: center; align-items: center; z-index: 999;
 }
-.result-card { background: white; padding: 40px; border-radius: 20px; text-align: center; width: 80%; max-width: 400px; }
+.result-card { background: white; padding: 30px; border-radius: 20px; text-align: center; }
 
-/* Navigation */
-.top-nav { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    padding: 10px 20px; 
-    background: white; 
-    border-bottom: 2px solid #ddd; 
-}
-.game-title { font-size: 18px; font-weight: bold; color: #1e40af; text-align: center; flex: 1; }
+/* Top Nav */
+.top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: white; border-bottom: 2px solid #ddd; height: 60px; }
+.game-title { font-size: 1.2rem; font-weight: bold; color: #1e40af; }
 
-/* Arena - Desktop par horizontal, Mobile par vertical */
+/* Arena: Middle Position Logic */
 .arena { 
     display: flex; 
-    height: calc(100vh - 60px); /* Top nav minus karke */
+    height: calc(100vh - 60px); 
     align-items: stretch; 
+    justify-content: center; /* Desktop par center alignment */
 }
 
 .panel { 
@@ -34,60 +28,78 @@ body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; overflow-x: hid
     display: flex; 
     flex-direction: column; 
     align-items: center; 
+    justify-content: center; /* Content ko panel ke beech mein rakhega */
     border: 1px solid #e2e8f0; 
-    overflow-y: auto;
 }
-.blue-side { border-top: 8px solid #3b82f6; }
-.red-side { border-top: 8px solid #ef4444; }
+.blue-side { border-top: 10px solid #3b82f6; }
+.red-side { border-top: 10px solid #ef4444; }
 
-.math-q { font-size: 28px; font-weight: bold; margin: 15px 0; color: #1e3a8a; }
-.ans-screen { width: 100%; background: #f8fafc; padding: 10px; text-align: center; font-size: 24px; border-radius: 10px; border: 1px solid #cbd5e1; margin-bottom: 15px; }
-
-/* Keypad Grid */
-.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 250px; }
-.keypad button { height: 50px; border: none; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
-.keypad button:active { transform: scale(0.95); background: #f1f5f9; }
-
-.btn-blue { background: #3b82f6 !important; color: white; }
-.btn-red { background: #ef4444 !important; color: white; }
-
-/* Animation Zone */
+/* Animation Zone (Middle Video) */
 .animation-zone { 
-    flex: 1.5; 
+    flex: 2; /* Isse video zone ko zyada space milega */
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    justify-content: center; 
+    justify-content: center; /* Video ko vertical center karne ke liye */
     background: white; 
     position: relative;
+    overflow: hidden;
 }
-.video-window { width: 100%; height: 100%; max-height: 400px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
-#tugVideo { width: 100%; max-width: 800px; height: auto; object-fit: contain; }
-.divider-line { position: absolute; left: 50%; height: 100%; width: 1px; border-left: 2px dashed #cbd5e1; z-index: 1; }
 
-/* --- MOBILE RESPONSIVE CODE --- */
+.timer { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; color: #333; z-index: 2; }
+
+.video-window { 
+    width: 100%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    position: relative;
+}
+
+.video-stage { 
+    width: 100%; 
+    display: flex; 
+    justify-content: center; 
+    transition: transform 0.5s ease-out; 
+}
+
+#tugVideo { 
+    width: 100%; 
+    max-width: 800px; /* Desktop par bada dikhega */
+    height: auto; 
+}
+
+.divider-line { 
+    position: absolute; 
+    left: 50%; 
+    height: 120%; 
+    width: 2px; 
+    border-left: 2px dashed #cbd5e1; 
+    z-index: 1;
+}
+
+/* Keypad & Math Styles */
+.math-q { font-size: 2.2rem; font-weight: bold; margin-bottom: 10px; color: #1e3a8a; }
+.ans-screen { width: 120px; background: #333; color: white; padding: 10px; text-align: center; font-size: 1.8rem; border-radius: 8px; margin-bottom: 15px; }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 200px; }
+.keypad button { height: 50px; border: none; background: #f8fafc; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+
+/* MOBILE SETTINGS */
 @media (max-width: 768px) {
-    body { overflow-y: auto; }
-    .arena { flex-direction: column; height: auto; }
+    .arena { flex-direction: column; overflow-y: auto; }
     
+    /* Video mobile par middle mein rahega panels ke beech mein */
     .animation-zone { 
-        order: -1; /* Video ko sabse upar laane ke liye */
+        order: 2; /* Team 1 (1), Video (2), Team 2 (3) */
         height: 250px; 
-        width: 100%;
-        border: none;
-        border-bottom: 2px solid #ddd;
+        flex: none; 
+        border-top: 2px solid #eee;
+        border-bottom: 2px solid #eee;
     }
     
-    .video-window { height: 200px; }
-
-    .panel { 
-        width: 100%; 
-        height: auto; 
-        padding: 20px;
-        border-top: 5px solid;
-    }
+    .panel.blue-side { order: 1; height: auto; padding: 20px 10px; }
+    .panel.red-side { order: 3; height: auto; padding: 20px 10px; }
     
-    .keypad { max-width: 300px; }
-    .game-title { font-size: 16px; }
-    .nav-btn { font-size: 12px; }
+    .math-q { font-size: 1.8rem; }
+    #tugVideo { max-width: 100%; }
 }
