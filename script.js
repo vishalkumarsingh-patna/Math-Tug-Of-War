@@ -1,58 +1,66 @@
-// --- AGORA CONFIG ---
+// --- CONFIGURATION ---
 const APP_ID = "0cc4d8757a0d448b8b104d631539ad67";
-const CHANNEL = "TugOfWar_Lobby";
+const CHANNEL = "MathTugLobby";
 let client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-let localAudioTrack = null;
+let localAudioTrack;
 
 let game = {
     A: { ans: 0, cur: "", score: 0 },
     B: { ans: 0, cur: "", score: 0 },
-    pos: 0, timeLeft: 60, status: "WAITING", isMuted: false
+    pos: 0,
+    timeLeft: 60,
+    status: "WAITING",
+    isMuted: false
 };
 
-// --- START GAME FUNCTION ---
+// --- START GAME & VOICE ---
 async function startGame() {
+    let selectedTime = document.getElementById('time-select').value;
+    game.timeLeft = parseInt(selectedTime);
+    
+    document.getElementById('setup-screen').style.display = 'none';
+    game.status = "ON";
+
+    // PUBG Style Voice Join
     try {
-        // 1. Voice Connection (PUBG Style)
         await client.join(APP_ID, CHANNEL, null, null);
         localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
         await client.publish([localAudioTrack]);
-        
+        console.log("Voice Chat Connected");
+
         client.on("user-published", async (user, mediaType) => {
             await client.subscribe(user, mediaType);
             if (mediaType === "audio") user.audioTrack.play();
         });
-        console.log("Voice connected!");
-
-        // 2. UI & Timer Logic
-        let selectedTime = document.getElementById('time-select').value;
-        game.timeLeft = parseInt(selectedTime);
-        document.getElementById('setup-screen').style.display = 'none';
-        game.status = "ON";
-
-        genNewQ('A');
-        genNewQ('B');
-        startTimer();
     } catch (err) {
-        console.error("Game Start Error: ", err);
-        alert("Please allow Microphone permission to play!");
+        console.error("Voice Chat failed: ", err);
     }
+
+    genNewQ('A');
+    genNewQ('B');
+    startTimer();
 }
 
-// --- MIC TOGGLE ---
+// --- VOICE MUTE LOGIC ---
 async function toggleMute() {
     if (!localAudioTrack) return;
     game.isMuted = !game.isMuted;
     await localAudioTrack.setEnabled(!game.isMuted);
+    
     const micBtn = document.getElementById('mic-btn');
-    micBtn.innerText = game.isMuted ? "🔇" : "🎙️";
-    micBtn.classList.toggle('muted');
+    if (game.isMuted) {
+        micBtn.classList.add('muted');
+        micBtn.innerText = "🔇";
+    } else {
+        micBtn.classList.remove('muted');
+        micBtn.innerText = "🎙️";
+    }
 }
 
-// --- MATH LOGIC ---
+// --- GAME CORE LOGIC ---
 function genNewQ(team) {
-    let n1 = Math.floor(Math.random() * 20) + 1;
-    let n2 = Math.floor(Math.random() * 20) + 1;
+    let n1 = Math.floor(Math.random() * 50) + 1;
+    let n2 = Math.floor(Math.random() * 50) + 1;
     game[team].ans = n1 + n2;
     game[team].cur = "";
     document.getElementById(`q${team}`).innerText = `${n1} + ${n2}`;
@@ -61,21 +69,37 @@ function genNewQ(team) {
 
 function press(num, team) {
     if (game.status !== "ON") return;
-    game[team].cur += num;
-    document.getElementById(`display${team}`).innerText = game[team].cur;
+    if (game[team].cur.length < 4) {
+        game[team].cur += num;
+        document.getElementById(`display${team}`).innerText = game[team].cur;
+    }
+}
+
+function clearInp(team) {
+    game[team].cur = "";
+    document.getElementById(`display${team}`).innerText = "0";
 }
 
 function submit(team) {
     if (game.status !== "ON" || game[team].cur === "") return;
+
     if (parseInt(game[team].cur) === game[team].ans) {
-        game.pos += (team === 'A' ? -10 : 10);
+        game.pos += (team === 'A' ? -8 : 8);
         document.getElementById('video-stage').style.transform = `translateX(${game.pos}%)`;
-        if (Math.abs(game.pos) >= 50) matchOver(`TEAM ${team === 'A' ? '1' : '2'} WON!`);
+        
+        if (Math.abs(game.pos) >= 45) {
+            matchOver(`TEAM ${team === 'A' ? '1' : '2'} JEET GAYI!`);
+        }
         genNewQ(team);
     } else {
-        document.getElementById(`display${team}`).innerText = "WRONG";
-        setTimeout(() => { game[team].cur = ""; document.getElementById(`display${team}`).innerText = "0"; }, 500);
+        triggerWrongEffect(team);
     }
+}
+
+function triggerWrongEffect(team) {
+    let display = document.getElementById(`display${team}`);
+    display.style.color = "red";
+    setTimeout(() => { display.style.color = "#22c55e"; clearInp(team); }, 500);
 }
 
 function startTimer() {
@@ -97,5 +121,6 @@ function matchOver(msg) {
 }
 
 function loginWithGoogle() {
-    alert("Gmail login linked! Now click START GAME.");
+    // Basic trigger for now
+    alert("Gmail Login Successfully!");
 }
